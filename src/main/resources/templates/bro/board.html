@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${board.name}">Board</title>
+    <!-- 新 Bootstrap4 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- bootstrap.bundle.min.js 用于弹窗、提示、下拉菜单，包含了 popper.min.js -->
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+
+    <!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+<div th:replace="../templates/common/navbar :: navbar"></div>
+
+<div class="container">
+
+
+    <div style="padding-top: 100px;"></div>
+
+    <div class="well well-lg">
+        <h4 th:text="${board.name}">XD</h4>
+        <p th:text="${board.description}">description</p>
+    </div>
+
+    <!-- 发帖按钮 -->
+    <div>
+        <!-- 按钮触发模态框 -->
+        <button class="btn btn-primary btn-sm" data-toggle="modal"
+                data-target="#myModal">
+            <h5>发帖</h5>
+        </button>
+    </div>
+
+    <div style="padding-top: 20px;"></div>
+
+
+    <!-- post 面板 -->
+    <ul class="list-group">
+        <li class="media pb-3 pt-3 mb-3 border-bottom" th:each="map:${posts}">
+            <a th:href="|/user/${map.user.username}|">
+                <img th:src="${map.user.avatar}" class="mr-4 " alt="avatar"
+                     style="width:50px;height:50px;">
+            </a>
+            <div class="media-body">
+                <h6 class="mt-0 mb-3">
+                    <a th:href="@{|/post/${map.post.id}|}" th:utext="${map.post.title}">title</a>
+                    <!--                    <span class="badge badge-secondary bg-primary" th:if="${map.post.type==1}">置顶</span>-->
+                    <!--                    <span class="badge badge-secondary bg-danger" th:if="${map.post.status==1}">精华</span>-->
+                </h6>
+                <div class="text-muted font-size-12">
+<!--                    <a th:href="|/board/${map.board.ename}|">-->
+<!--                        <button type="button " class="btn btn-info btn-sm" th:text="${map.board.name}">-->
+<!--                            board-->
+<!--                        </button>-->
+<!--                    </a>-->
+                    <u class="mr-3" th:utext="${map.user.username}">user</u>
+                    <ul class="d-inline float-right">
+                        <li class="d-inline ml-2" th:if="${map.likeCount} > 0">赞 <span th:text="${map.likeCount}">11</span></li>
+                        <li class="d-inline ml-2" th:if="${map.likeCount} > 0">•</li>
+                        <li class="d-inline ml-2"> <span class="badge badge-pill badge-secondary" th:text="${map.post.replyCount}">7</span></li>
+                        <li class="d-inline ml-2">•</li>
+                        <li class="d-inline ml-2"> <b
+                                th:text="${#dates.format(map.post.lastModifiedTime, 'yyyy-MM-dd HH:mm:ss')}">2019-04-15
+                            15:32:18</b></li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+    </ul>
+
+
+    <!-- ---------   pagination   ------------->
+    <ul class="pagination  justify-content-center" th:with="begin=1 , end=${page.totalPage} , size=2"
+        style="padding-top: 100px">
+        <!-- 上一页 -->
+        <li class="page-item">
+            <a class="page-link" th:href="|${page.path}?page=${page.cur - 1}|"
+               th:if="${page.cur != 1}">&laquo;</a>
+        </li>
+
+        <!-- list -->
+        <li th:class="|page-item ${page.cur == i ? 'active' : ''}|" th:each="i:${#numbers.sequence(begin,end)}">
+            <a class="page-link " th:text="${i}" th:href="|${page.path}?page=${i}|">1</a>
+        </li>
+
+
+        <!-- 下一页 -->
+        <li class="page-item">
+            <a class="page-link" th:if="|${page.cur != page.totalPage}|"
+               th:href="|${page.path}?page=${page.cur + 1}|">&raquo;</a>
+        </li>
+    </ul>
+</div>
+
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="0" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="#" name="post" role="form">
+                    <input type="hidden" id="boardid" value="${board.id}">
+                    <input type="hidden" id="boardename" value="${board.ename}">
+                    <div class="form-group">
+                        <label>请输入标题(
+                            <small>50字以内</small>
+                            )</label>
+                        <textarea class="form-control" rows="2" cols="65" name="title" id="title" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>请输入内容(
+                            <small>500字以内</small>
+                            )</label>
+                        <textarea class="form-control" rows="4" cols="65" name="content" id="content"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>版块</label>
+                        <input type="hidden" id="boardId" th:value="${board.id}">
+                        <span th:text="${board.name}"><strong>board</strong></span>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+                <button type="button" onclick="publish_post()"
+                        class="btn btn-primary">确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--<script>-->
+
+<!--    function submit_button() {-->
+
+<!--        var title = $("#title").val().trim();-->
+<!--        var content = $("#content").val().trim();-->
+<!--        var boardId = $("#boardId").val();-->
+
+<!--        if (content == null || content === "") {-->
+<!--            alert("标题不能为空");-->
+<!--            return;-->
+<!--        }-->
+
+
+<!--        var data = {-->
+<!--            title: title,-->
+<!--            content: content,-->
+<!--            boardId: boardId-->
+<!--        };-->
+
+<!--        $.ajax({-->
+<!--            type: "post",-->
+<!--            url: "/post/insert",-->
+<!--            data: JSON.stringify(data),-->
+<!--            dataType: "json",-->
+<!--            contentType: "application/json;charset=UTF-8",-->
+<!--            success: function (result) {-->
+<!--                if (result["msg"] == "success") {-->
+<!--                    alert("发帖成功");-->
+<!--                    window.location.href = "/forum/home";-->
+<!--                } else if (result["msg"] == "unlogin") {-->
+<!--                    alert("请先登陆");-->
+<!--                    return;-->
+<!--                }-->
+<!--            },-->
+<!--            error: function (result) {-->
+<!--                alert("templates.bro.error")-->
+<!--            }-->
+<!--        });-->
+<!--    };-->
+<!--</script>-->
+
+<script src="/static/js/publish.js"></script>
+<script src="/static/js/global.js"></script>
+<script src="/static/js/websocket.js"></script>
+</body>
+</html>

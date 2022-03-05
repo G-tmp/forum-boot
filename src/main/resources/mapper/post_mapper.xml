@@ -1,0 +1,88 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gtmp.mapper.PostMapper">
+    <sql id="selectFields">
+        `id`,`board_id`, `user_id`, `title`, `content`, `status`, `create_time`,`lastmodified_time`, `reply_count`, `score`
+    </sql>
+
+    <sql id="insertFields">
+        `board_id`,`user_id`, `title`, `content`,`create_time`,`lastmodified_time`
+    </sql>
+
+    <select id="listPostsOrderByModifyTime" resultType="com.gtmp.POJO.Post">
+        select
+        <include refid="selectFields"></include>
+        from `post`
+        where status != 2
+        order by lastmodified_time desc
+        limit #{offset},#{limit};
+    </select>
+
+    <select id="listPostsOrderByCreateTime" resultType="com.gtmp.POJO.Post">
+        select
+        <include refid="selectFields"></include>
+        from `post`
+        where status != 2
+        order by create_time desc
+        limit #{offset},#{limit};
+    </select>
+
+    <select id="listPostsOrderByScore" resultType="com.gtmp.POJO.Post">
+        select
+        <include refid="selectFields"></include>
+        from `post`
+        where status != 2
+        order by score desc
+        limit #{offset},#{limit};
+    </select>
+
+    <select id="listPostsByBoardId" resultType="com.gtmp.POJO.Post">
+        select
+        <include refid="selectFields"></include>
+        from `post`
+        where status != 2 and board_id = #{boardId}
+        order by lastmodified_time desc
+        limit #{offset},#{limit};
+    </select>
+
+    <select id="listPostsByUserId" resultType="com.gtmp.POJO.Post">
+        select
+        <include refid="selectFields"></include>
+        from `post`
+        where status != 2 and user_id = #{userId}
+        order by create_time desc
+        limit #{offset},#{limit};
+    </select>
+
+    <select id="selectPostCount" resultType="int">
+        select count(id)
+        from `post`
+        where status != 2 ;
+    </select>
+
+    <select id="selectPostCountByBoardId" resultType="int">
+        select count(id)
+        from `post`
+        where status != 2 and board_id = #{boardId};
+    </select>
+
+    <select id="selectPostById" resultType="com.gtmp.POJO.Post">
+        select
+        <include refid="selectFields"/>
+        from `post`
+        where id = #{id}
+    </select>
+
+    <insert id="insertPost" parameterType="com.gtmp.POJO.Post" keyProperty="id">
+        insert into `post`
+        (<include refid="insertFields"/>)
+        values (#{boardId},#{userId}, #{title}, #{content},#{createTime},#{lastModifiedTime} )
+    </insert>
+
+    <update id="increaseReplyCount">
+        update `post`
+        set reply_count = reply_count+1 , lastmodified_time = now()
+        where id = #{id}
+    </update>
+</mapper>

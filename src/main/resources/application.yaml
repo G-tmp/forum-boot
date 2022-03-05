@@ -1,0 +1,68 @@
+
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+spring:
+  profiles:
+    include: 'password'
+  thymeleaf:
+    cache: false
+    prefix:
+      classpath: /templates/
+  mvc:
+    static-path-pattern: /static/**
+  resources:
+    static-locations: file:${forum.path.upload},classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/forumboot?useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: ${sql.username}
+    password: ${sql.password}
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      maximum-pool-size: 15
+      minimum-idle: 5
+      idle-timeout: 30000
+  mail:
+    host: smtp.qq.com
+    port: 465
+    username: ${mail.account}
+    password: ${mail.password}
+    #  protocol: smtps
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+  # redis
+  redis:
+    host: 127.0.0.1
+    port: 6379
+
+
+
+# mail 加密参数
+jasypt:
+  encryptor:
+    password: test
+
+# 配置sql打印日志
+logging:
+  level:
+    com.gtmp.mapper:
+      debug
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.gtmp.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    use-generated-keys: true
+
+forum:
+  path:
+    domain: http://127.0.0.1:8080
+    upload: ${user.home}/Templates/

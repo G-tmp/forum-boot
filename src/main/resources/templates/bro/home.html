@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>XD</title>
+    <!-- 新 Bootstrap4 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- bootstrap.bundle.min.js 用于弹窗、提示、下拉菜单，包含了 popper.min.js -->
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+
+    <!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+<div th:replace="../templates/common/navbar :: navbar"></div>
+
+<div class="container">
+
+    <div style="padding-top: 100px;"></div>
+
+
+    <!-- 发帖按钮 -->
+    <div>
+        <!-- 按钮触发模态框 -->
+        <button class="btn btn-primary btn-sm" data-toggle="modal"
+                data-target="#myModal">
+            <h5>发帖</h5>
+        </button>
+
+    </div>
+
+    <div style="padding-top: 20px;"></div>
+
+
+    <!-- post 面板 -->
+    <ul class="list-group">
+        <li class="media pb-3 pt-3 mb-3 border-bottom"th:if="${posts}!=null" th:each="map:${posts}">
+            <a th:href="|/user/${map.user.username}|">
+                <img th:src="${map.user.avatar}" class="mr-4 " alt="avatar"
+                     style="width:50px;height:50px;">
+            </a>
+            <div class="media-body">
+                <div class="mt-0 mb-3 content">
+                    <a th:href="@{|/post/${map.post.id}|}" th:utext="${map.post.title}">
+                        想到高中的時候有程式設計的社團想到高中的時候有程式設計的社團想到高中的時候有程社團想到高中的時候有程社團想到高中的時候有程社團想到高中的時候有程社團想到高中的時候有程社團想到高中的時候有程式設計的社團想到高中的時候有程式設計的社團想到高中的時候有程式設計的社團
+                        然後開課第一天就丟給你幾百頁的講義教你自己看
+                        期末要交成果出來
+                        每天上課就是面對電腦，教室超安靜
+                        學程式設計都這樣看書看講義就好？
+                    </a>
+                </div>
+
+                <!--                <h6 class="mt-4 mb-3">-->
+                <!--                    <a th:href="@{|/post/${map.post.id}|}" th:utext="${map.post.title}">-->
+                <!--                        想到高中的時候有程式設計 然後開課第一天-->
+                <!--                        然後開課第一天就丟給你幾百頁的講義教你自己看-->
+                <!--                        期末要交成果出來-->
+                <!--                        每天上課就是面對電腦，教室超安靜-->
+                <!--                        學程式設計都這樣看書看講義就好？-->
+                <!--                    </a>-->
+                <!--                    &lt;!&ndash;                    <span class="badge badge-secondary bg-primary" th:if="${map.post.type==1}">置顶</span>&ndash;&gt;-->
+                <!--                    &lt;!&ndash;                    <span class="badge badge-secondary bg-danger" th:if="${map.post.status==1}">精华</span>&ndash;&gt;-->
+                <!--                </h6>-->
+                <div class="text-muted font-size-12">
+                    <a th:href="|/board/${map.board.ename}|">
+                        <button type="button " class="btn btn-info btn-sm" th:text="${map.board.name}">
+                            board
+                        </button>
+                    </a>
+                    <u class="mr-3" th:utext="${map.user.username}">user</u>
+                    <ul class="d-inline float-right">
+                        <li class="d-inline ml-2" th:if="${map.likeCount} > 0">赞
+                            <span th:text="${map.likeCount}">11</span>
+                        </li>
+                        <li class="d-inline ml-2" th:if="${map.likeCount} > 0">•</li>
+                        <li class="d-inline ml-2">
+                            <span class="badge badge-pill badge-secondary"
+                                  th:text="${map.post.replyCount}">17</span>
+                        </li>
+                        <li class="d-inline ml-2">•</li>
+                        <li class="d-inline ml-2">
+                            <small th:text="${#dates.format(map.post.lastModifiedTime, 'yyyy-MM-dd HH:mm:ss')}">
+                                2019-04-1515:32:18
+                            </small>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+    </ul>
+
+    <!-- ---------   pagination   ------------->
+    <ul class="pagination  justify-content-center" th:with="begin=1 , end=${page.totalPage} , size=2"
+        style="padding-top: 100px">
+        <!-- 上一页 -->
+        <li class="page-item">
+            <a class="page-link" th:href="|${page.path}?page=${page.cur - 1}|"
+               th:if="${page.cur != 1}">&laquo;</a>
+        </li>
+
+        <!-- list -->
+        <li th:class="|page-item ${page.cur == i ? 'active' : ''}|" th:each="i:${#numbers.sequence(begin,end)}">
+            <a class="page-link " th:text="${i}" th:href="|${page.path}?page=${i}|">1</a>
+        </li>
+
+
+        <!-- 下一页 -->
+        <li class="page-item">
+            <a class="page-link" th:if="|${page.cur != page.totalPage}|"
+               th:href="|${page.path}?page=${page.cur + 1}|">&raquo;</a>
+        </li>
+    </ul>
+
+</div>
+
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="0" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <!--                <h3 class="modal-title" id="myModalLabel">标题</h3>-->
+            </div>
+            <div class="modal-body">
+                <form action="#" name="post" role="form">
+                    <div class="form-group">
+                        <label>请输入标题(
+                            <small>50字以内</small>
+                            )</label>
+                        <textarea class="form-control" rows="2" cols="65" name="title" id="title"
+                                  required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>请输入内容(
+                            <small>可以为空/500字以内</small>
+                            )</label>
+                        <textarea class="form-control" rows="4" cols="65" name="content" id="content"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>选择版块</label>
+                        <select class="form-control" id="boardId" name="board">
+                            <option th:each="b:${boards}" th:value="${b.id}" th:text="${b.name}">XD</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+                <button type="button" onclick="publish_post()"
+                        class="btn btn-primary">确定
+                </button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal -->
+</div>
+
+
+<script src="/static/js/global.js"></script>
+<script src="/static/js/websocket.js"></script>
+<script src="/static/js/publish.js"></script>
+</body>
+</html>

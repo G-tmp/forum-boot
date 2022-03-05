@@ -1,0 +1,94 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gtmp.mapper.NotifyMapper">
+
+    <sql id="selectFields">
+        `id`, `from_user_id`, `to_user_id`, `object_id`, `object_type`,`action`, `status`, `content`,`create_time`
+    </sql>
+    <sql id="insertFields">
+       `from_user_id`, `to_user_id`, `object_id`, `object_type`, `action`,`content`,`create_time`
+    </sql>
+
+
+
+    <insert id="insertNotify" parameterType="com.gtmp.POJO.Notify" keyProperty="id">
+        insert into `notify`
+        (<include refid="insertFields"/>)
+        values(#{fromUserId}, #{toUserId}, #{objectId}, #{objectType},#{action}, #{content},#{createTime})
+    </insert>
+
+    <select id="selectNotifyCountUnread" resultType="integer">
+        select count(id)
+        from `notify`
+        where status = 0
+        and to_user_id = #{toUserId}
+        <if test="action!=null">
+            and action = #{action}
+        </if>
+    </select>
+
+    <select id="selectNotifyCount" resultType="integer">
+        select count(id)
+        from `notify`
+        where status != 2
+        and to_user_id = #{toUserId}
+        <if test="action!=null">
+            and action = #{action}
+        </if>
+    </select>
+
+    <update id="updateStatus">
+        update `notify` set status = #{status}
+        where to_user_id = #{toUserId}
+        <if test="action!=null">
+            and action = #{action}
+        </if>
+        <if test="objectType!=null">
+            and object_type = #{objectType}
+        </if>
+    </update>
+
+    <select id="listAllNotify" resultType="com.gtmp.POJO.Notify">
+        select
+        <include refid="selectFields"/>
+        from `notify`
+        where status != 2
+        and to_user_id = #{toUserId}
+        <if test="action!=null">
+            and action = #{action}
+        </if>
+        order by id desc
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="listAllNotifyUnread" resultType="com.gtmp.POJO.Notify">
+        select
+        <include refid="selectFields"/>
+        from `notify`
+        where status = 0
+        and to_user_id = #{toUserId}
+        <if test="action!=null">
+            and action = #{action}
+        </if>
+        order by id desc
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="selectNotifyRecent" resultType="com.gtmp.POJO.Notify">
+        select
+        <include refid="selectFields"/>
+        from `notify`
+        where id in
+        (
+            select max(id)
+            from `notify`
+            where status != 2
+--             and from_user_id = 0
+            and to_user_id = #{toUserId}
+            <if test="action!=null">
+                and `action` = #{action}
+            </if>
+        )
+
+    </select>
+</mapper>

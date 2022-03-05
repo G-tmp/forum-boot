@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gtmp.mapper.PermissionMapper">
+
+    <select id="selectPermissionById" resultType="com.gtmp.POJO.Permission">
+       select * from `permission` where id=#{id};
+    </select>
+
+    <select id="selectPermissionByOpt" resultType="com.gtmp.POJO.Permission">
+       select * from `permission` where operation=#{opt};
+    </select>
+
+    <select id="listPermissions"  resultType="com.gtmp.POJO.Permission">
+       select * from `permission`;
+    </select>
+
+</mapper>

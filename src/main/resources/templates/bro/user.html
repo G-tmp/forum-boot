@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- 新 Bootstrap4 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- bootstrap.bundle.min.js 用于弹窗、提示、下拉菜单，包含了 popper.min.js -->
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+
+    <!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+<div th:replace="../templates/common/navbar :: navbar"></div>
+
+<div class="container">
+    <div style="padding-top: 100px;"></div>
+
+    <!-- 内容 -->
+    <div class="main">
+        <div class="container">
+            <!-- 选项 -->
+            <div class="position-relative">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="profile.html">个人信息</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="my-post.html">帖子</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="my-reply.html">回复</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 个人信息 -->
+            <div class="media mt-5">
+                <img th:src="${user.avatar}" id="avatar" class="align-self-start mr-4" alt="用户头像"
+                     style="width:50px;">
+                <div class="media-body">
+                    <h5 class="mt-0 text-success">
+                        <span th:utext="${user.username}">nowcoder</span>
+                        <input type="hidden" id="entityId" th:value="${user.id}">
+                        <button th:text="|${ifFollowing == true ? '已关注' : '关注TA'} |"
+                                th:onclick="|follow(this,1,${user.id} )|" type="button" id="followBtn"
+                                th:class="|btn btn-sm float-right mr-5  ${ifFollowing == true ? 'btn-secondary' : 'btn-info'}|">
+                            关注TA
+                        </button>
+                    </h5>
+                    <div class="text-muted mt-3">
+                        <span>注册于 <i class="text-muted"
+                                     th:text="${#dates.format(user.createTime, 'yyyy-MM-dd HH:mm:ss')}">2015-06-12 15:20:12</i></span>
+                    </div>
+
+<!--                    <div class="text-muted mt-3">-->
+<!--                        <span>Email-->
+<!--                          <i class="text-muted" th:text="${user.email}">123@xd.com</i>-->
+<!--                        </span>-->
+<!--                    </div>-->
+
+                    <div class="text-muted mt-3 mb-5">
+                        <span>following <a id="followingCount" class="text-primary"
+                                           th:text="${followingCount}">5</a> </span>
+                        <span class="ml-4">follower <a id="followerCount" class="text-primary"
+                                                       th:text="${followerCount}">123</a> </span>
+                        <!--                        <span class="ml-4">获得了 <i class="text-danger" th:text="${likeCount}">87</i> 个赞</span>-->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="/static/js/follow.js"></script>
+<script src="/static/js/global.js"></script>
+<script src="/static/js/websocket.js"></script>
+
+</body>
+</html>

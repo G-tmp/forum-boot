@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Sign in</title>
+    <!-- 新 Bootstrap4 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- bootstrap.bundle.min.js 用于弹窗、提示、下拉菜单，包含了 popper.min.js -->
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+
+    <!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+<div th:replace="../templates/common/navbar :: navbar"></div>
+
+
+<div class="container">
+    <div style="padding-top: 100px;"></div>
+
+    <h2>Log in</h2>
+    <hr>
+    <form>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" class="form-control col-sm-8" id="email" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" class="form-control col-sm-8" id="password" placeholder="Enter password">
+        </div>
+        <div class="form-group">
+            <label for="verifycode">code:</label>
+            <input type="text" class="form-control col-sm-8" id="verifyCode" placeholder="Enter code">
+            <img id="kaptcha" th:src="@{/kaptcha}" style="width:100px;height:40px;">
+            <a href="javascript:refresh_kaptcha();" class="font-size-12 align-bottom">刷新验证码</a>
+        </div>
+        <div class="form-check">
+            <label class="form-check-label">
+                <input type="checkbox" class="form-check-input" id="rememberMe" name="rememberMe" value="">Remember me
+            </label>
+        </div>
+        <hr>
+        <a class="btn btn-primary" onclick="login()">Log in</a>
+    </form>
+
+</div>
+
+
+<script src="/static/js/websocket.js"></script>
+<script src="/static/js/login.js"></script>
+<script src="/static/js/global.js"></script>
+</body>
+</html>

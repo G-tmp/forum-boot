@@ -1,0 +1,23 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gtmp.mapper.LikeMapper">
+
+    <sql id="selectFields">
+        `user_id`,`object_type`,`object_id`,`status`,`create_time`
+    </sql>
+
+    <sql id="insertFields">
+        `user_id`,`object_type`,`object_id`,`status`,`create_time`
+    </sql>
+
+
+    <insert id="insertOrUpdateLike" keyProperty="id" parameterType="com.gtmp.POJO.Like">
+        insert into `like`
+        <include refid="insertFields"/>
+        values (#{userId},#{objectType},#{objectId},#{status},#{createTime})
+        ON DUPLICATE KEY UPDATE status = #{status}, create_time = #{createTime};
+    </insert>
+
+
+
+</mapper>

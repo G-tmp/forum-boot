@@ -1,0 +1,48 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gtmp.mapper.BoardMapper">
+
+    <sql id="selectFields">
+        `id`,`name`,`ename`,`description`
+    </sql>
+
+    <sql id="insertFields">
+        `name`,`ename`,`description`
+    </sql>
+
+
+    <select id="listAllBoard" resultType="com.gtmp.POJO.Board">
+        select
+        <include refid="selectFields"/>
+        from `board`;
+    </select>
+
+    <select id="selectBoardById" resultType="com.gtmp.POJO.Board">
+        select
+        <include refid="selectFields"/>
+        from `board`
+        where id = #{id} ;
+    </select>
+
+    <select id="selectBoardByEname" resultType="com.gtmp.POJO.Board">
+        select
+        <include refid="selectFields"/>
+        from `board`
+        where ename = #{ename} ;
+    </select>
+
+    <insert id="insertBoard" parameterType="com.gtmp.POJO.Board" keyProperty="id">
+        insert into `post`
+        <include refid="insertFields"/>
+        values (#{name},#{ename},#{description});
+    </insert>
+
+    <update id="updateBoard" parameterType="com.gtmp.POJO.Board">
+        update `board`
+         set
+            name = #{name},
+            ename = #{ename},
+            description = #{description}
+        where id = #{id}
+    </update>
+</mapper>
