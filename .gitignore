@@ -28,3 +28,5 @@ hs_err_pid*
 .idea
 application-password.yaml
 /target
+/test
+
