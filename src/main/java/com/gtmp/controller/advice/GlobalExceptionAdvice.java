@@ -31,14 +31,10 @@ public class GlobalExceptionAdvice {
         }
 
         if (isAjax(request)){
-            response.setContentType("application/json; charset=utf-8");
+            response.setContentType("application/json");
             ServletOutputStream out = response.getOutputStream();
-//            PrintWriter out = response.getWriter();
-//            out.write(jsonRes.toString());
             JsonRes jsonRes = new JsonRes().setCode(JsonRes.ERROR_CODE).setMsg("服务器异常!");
-            out.write(jsonRes.toString().getBytes());
-//            ServletOutputStream outputStream = response.getOutputStream();
-//            outputStream.write(ForumUtil.getJSONString(1, "服务器异常!").getBytes());
+            out.write(jsonRes.toJson().getBytes());
         }else {
             response.sendRedirect(ForumUtil.contextPathJudge(request.getContextPath()) + "/error");
         }

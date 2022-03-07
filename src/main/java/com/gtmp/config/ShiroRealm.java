@@ -30,17 +30,14 @@ public class ShiroRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        Subject subject = SecurityUtils.getSubject();
-        User user = (User) subject.getPrincipal();
+        User user = (User) principals.getPrimaryPrincipal();
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
 
-        if (user.getRole() == null) {
-            return info;
-        }
         user = userService.selectUserWithRoleByEmail(user.getEmail());
 
         // add role
         info.addRole(user.getRole().getName());
+
         // add permission
         if (user.getRole().getPermissions() != null  && user.getRole().getPermissions().size()>0){
             List<String> list = new ArrayList<>();
@@ -62,7 +59,6 @@ public class ShiroRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
         User user = userService.selectUserByEmail(token.getUsername());
-        System.out.println(user);
 
         if (user == null) {
             throw new UnknownAccountException("account not exist!");

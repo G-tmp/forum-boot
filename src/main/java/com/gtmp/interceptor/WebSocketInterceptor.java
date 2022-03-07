@@ -29,8 +29,6 @@ public class WebSocketInterceptor implements HandshakeInterceptor {
             Session session = SecurityUtils.getSubject().getSession();
 
             if (cookie != null && cookie.getValue().equals(session.getId())) {
-                System.out.println("cookie: "+cookie.getValue());
-                System.out.println("session: "+session.getId());
                 attributes.put("JSESSIONID", cookie.getValue());
                 return true;
             }

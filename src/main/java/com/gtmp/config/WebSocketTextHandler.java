@@ -26,7 +26,6 @@ public class WebSocketTextHandler extends TextWebSocketHandler {
     // onopen event
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        System.out.println("open: "+session);
         String jsessionId = (String) session.getAttributes().get("JSESSIONID");
 
         if (jsessionId != null) {
@@ -34,7 +33,6 @@ public class WebSocketTextHandler extends TextWebSocketHandler {
             if (WsSessionManager.get(jsessionId) == null){
                 WsSessionManager.add(jsessionId, session);
             }
-            System.out.println(WsSessionManager.list());
         } else {
             throw new RuntimeException("User login has expired!");
         }

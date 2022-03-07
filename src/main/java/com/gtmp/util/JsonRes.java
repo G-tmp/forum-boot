@@ -1,5 +1,8 @@
 package com.gtmp.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class JsonRes {
 
     public static final int SUCCESS_CODE = 0;
@@ -50,4 +53,10 @@ public class JsonRes {
                 ", data=" + data +
                 '}';
     }
+
+    public String toJson() throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(this);
+    }
+
 }

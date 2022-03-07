@@ -21,15 +21,14 @@ function publish_post() {
         dataType: "json",
         contentType: "application/json;charset=UTF-8",
         success: function (result) {
-            alert(JSON.stringify(result));
             if (result['code'] === 0) {
                 location.reload();
             } else {
-                alert(JSON.stringify(result));
+                alert(result['msg']);
             }
         },
         error: function (result) {
-            alert("error : " + result)
+            alert("error")
         }
     });
 }
@@ -58,7 +57,6 @@ function publish_reply() {
         dataType: "json",
         contentType: "application/json;charset=UTF-8",
         success: function (result) {
-            // alert(JSON.stringify(result));
             if (result['code'] === 0) {
                 location.reload();
             } else {
@@ -66,7 +64,7 @@ function publish_reply() {
             }
         },
         error: function (result) {
-            alert("error : " + JSON.stringify(result));
+            alert("error");
         }
     });
 }

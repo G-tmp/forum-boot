@@ -1,18 +1,36 @@
 package com.gtmp.config;
 
 
+import com.gtmp.filter.ShiroAuthenticateFilter;
+import com.gtmp.filter.ShiroAuthorizePermsFilter;
+import com.gtmp.filter.ShiroAuthorizeRolesFilter;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.servlet.Filter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Configuration
 public class ShiroConfig {
 
+    @Bean
+    ShiroAuthenticateFilter authenticateFilter(){
+        return new ShiroAuthenticateFilter();
+    }
+
+    @Bean
+    ShiroAuthorizeRolesFilter authenticateRolesFilter(){
+        return new ShiroAuthorizeRolesFilter();
+    }
+
+    @Bean
+    ShiroAuthorizePermsFilter authenticatePermsFilter(){
+        return new ShiroAuthorizePermsFilter();
+    }
 
     @Bean
     ShiroRealm myRealm() {
@@ -31,8 +49,8 @@ public class ShiroConfig {
     @Bean
     DefaultWebSecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        securityManager.setRealm(myRealm());
         securityManager.setSessionManager(defaultWebSessionManager());
+        securityManager.setRealm(myRealm());
 
         return securityManager;
     }
@@ -43,11 +61,17 @@ public class ShiroConfig {
         ShiroFilterFactoryBean bean = new ShiroFilterFactoryBean();
         bean.setSecurityManager(securityManager());
         // 未认证状态下访问将跳转至login页面
-        bean.setLoginUrl("/login");
+//        bean.setLoginUrl("/login");
         // 认证成功后要跳转的链接
-        bean.setSuccessUrl("/index");
+//        bean.setSuccessUrl("/index");
         // 认证但是无授限状态下访问将请求unauthor
-        bean.setUnauthorizedUrl("/unauthorized");
+//        bean.setUnauthorizedUrl("/unauthorized");
+
+        Map<String,Filter> filterMap = new LinkedHashMap<>();
+        filterMap.put("authc", authenticateFilter());
+        filterMap.put("roles", authenticateRolesFilter());
+        filterMap.put("perms", authenticatePermsFilter());
+        bean.setFilters(filterMap);
 
         Map<String, String> map = new LinkedHashMap<>();
         /**
@@ -57,15 +81,18 @@ public class ShiroConfig {
          * 2.authc:必须认证才能访问
          * 3.user：如果使用rememberme功能可以访问
          * 4.perms：对应权限才能访问
-         * 5.role：对应角色才能访问
+         * 5.roles：对应角色才能访问
          */
         map.put("/login","anon");
         map.put("/","anon");
         map.put("/index","anon");
         map.put("/profile","authc");
         map.put("/*/insert","authc");
-        map.put("/admin","roles[root]");
+        map.put("/normal/**","roles[normal, root]");
+        map.put("/admin/**","roles[root]");
+        map.put("/xd","perms[read]");
         bean.setFilterChainDefinitionMap(map);
+
         return bean;
     }
 
