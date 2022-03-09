@@ -47,7 +47,7 @@ public class BoardController {
 
         Page page = new Page();
         page.setPath("/board/" + board.getEname());
-        page.setProperties(5, cur, postService.selectPostCountByBoardId(board.getId()));
+        page.setProperties(5, cur, postService.countPostByBoardId(board.getId()));
 
         List<Post> posts = postService.listPostsByBoardId(board.getId(), (page.getCur() - 1) * page.getSize(), page.getSize());
         List<Map<String, Object>> list = new ArrayList<>();

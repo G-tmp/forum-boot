@@ -1,0 +1,60 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gtmp.mapper.NotificationMapper">
+
+    <resultMap id="notificationMap" type="com.gtmp.POJO.Notification">
+        <id property="id" column="id"></id>
+        <result property="fromUserId" column="from_user_id"></result>
+        <result property="toUserId" column="to_user_id"></result>
+        <result property="event" column="event"></result>
+        <result property="triggerType" column="trigger_type"></result>
+        <result property="triggerId" column="trigger_id"></result>
+        <result property="read" column="read"></result>
+        <result property="createTime" column="create_time"></result>
+        <collection property="fromUser" ofType="com.gtmp.POJO.User">
+            <id property="id" column="user_id"></id>
+            <result property="username" column="username"></result>
+        </collection>
+    </resultMap>
+
+    <sql id="selectFields">
+        `id`,`from_user_id`,`to_user_id`,`event`,`trigger_type`,`trigger_id`,`read`,`create_time`
+    </sql>
+
+    <sql id="insertFields">
+        `from_user_id`,`to_user_id`,`event`,`trigger_type`,`trigger_id`
+    </sql>
+
+
+    <insert id="insertNotification" parameterType="com.gtmp.POJO.Notification">
+        insert  into `notification`
+        (<include refid="insertFields"/>)
+        values (#{fromUserId}, #{toUserId}, #{event}, #{triggerType}, #{triggerId});
+    </insert>
+
+    <select id="listNotificationByUserId" resultMap="notificationMap">
+        select n.* , u.id as `user_id`, u.username
+        from `notification` n
+        join `user` u
+        on n.from_user_id = u.id
+        where n.`to_user_id` = #{userId};
+    </select>
+
+    <select id="countUnreadNotificationByUserId" resultType="int">
+        select
+        <include refid="selectFields"/>
+        from `notification` where `read` = 0 and `to_user_id` = #{userId};
+    </select>
+
+    <update id="readNotification">
+        update `notification`
+         set `read` = 1
+        where id = #{id};
+    </update>
+
+    <update id="readAllNotificationByUser">
+        update `notification`
+         set `read` = 1
+        where `to_user_id` = #{userId};
+    </update>
+</mapper>

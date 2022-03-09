@@ -7,10 +7,12 @@ import com.gtmp.service.*;
 import com.gtmp.util.*;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.HtmlUtils;
 
 import java.util.*;
 
@@ -21,18 +23,12 @@ public class PostController implements ForumConstant {
     @Autowired
     PostService postService;
 
-    @Autowired
-    HostHolder hostHolder;
 
     @Autowired
     UserService userService;
 
     @Autowired
     LikeService likeService;
-
-
-//    @Resource
-//    EventProducer eventProducer;
 
     @Autowired
     BoardServer boardServer;
@@ -52,16 +48,15 @@ public class PostController implements ForumConstant {
         Session session = SecurityUtils.getSubject().getSession();
         User user = (User) session.getAttribute("loginUser");
 
+        // 转义 HTML
+        title = HtmlUtils.htmlEscape(title);
+        content = HtmlUtils.htmlEscape(content);
+
         Post post = new Post();
         post.setUserId(user.getId())
                 .setBoardId(boardId)
                 .setTitle(title)
-                .setContent(content)
-                .setReplyCount(0)
-                .setScore(0.0)
-                .setStatus(0)
-                .setCreateTime(new Date())
-                .setLastModifiedTime(new Date());
+                .setContent(content);
 
         postService.insertPost(post);
 
@@ -80,7 +75,9 @@ public class PostController implements ForumConstant {
 
     @RequestMapping(value = "/{postId}", method = RequestMethod.GET)
     public String selectPostById(Model model, @PathVariable("postId") Integer postId, @RequestParam(value = "page", required = false) Integer cur) {
-        User loginUser = hostHolder.getUser();
+        Subject subject = SecurityUtils.getSubject();
+        User loginUser = (User) subject.getPrincipal();
+
         // 帖子
         Post post = postService.selectPostById(postId);
         // 作者
@@ -88,25 +85,26 @@ public class PostController implements ForumConstant {
         // board
         Board board = boardServer.selectBoardById(post.getBoardId());
         // 点赞数量
-        long likeCount = likeService.findEntityLikeCount(ObjectTypeEnum.POST, postId);
-        //点赞状态
-        boolean ifLike = false;
-        if (loginUser != null)
-            ifLike = likeService.findEntityLikeStatus(loginUser.getId(), ObjectTypeEnum.POST, postId);
+//        long likeCount = likeService.findEntityLikeCount(ObjectTypeEnum.POST, postId);
+//        //点赞状态
+//        boolean ifLike = false;
+//        if (loginUser != null)
+//            ifLike = likeService.findEntityLikeStatus(loginUser.getId(), ObjectTypeEnum.POST, postId);
 
         // 评论分页
         Page page = new Page();
-        page.setProperties(5, cur, replyService.selectReplyCountByPostId(postId));
+        page.setProperties(5, cur, replyService.countReplyByPostId(postId));
         page.setPath("/post/" + postId);
 
 
         List<Reply> replyList = replyService.listReplyByPostId(postId, (page.getCur() - 1) * page.getSize(), page.getSize());
 
         // 评论列表
-        List<Map<String, Object>> comments = new ArrayList<>();
+        List<Map<String, Object>> replies = new ArrayList<>();
         if (replyList != null) {
             for (Reply reply : replyList) {
                 Map<String, Object> map = new HashMap<>();
+                reply.setContent(RegexUtil.mentionAddLink(reply.getContent(), "/user"));
                 map.put("reply", reply);
 
                 User user = userService.selectUserById(reply.getUserId());
@@ -122,16 +120,16 @@ public class PostController implements ForumConstant {
                     map.put("ifLike", false);
                 }
 
-                comments.add(map);
+                replies.add(map);
             }
         }
         model.addAttribute("post", post);
         model.addAttribute("user", postUser);
         model.addAttribute("board", board);
         model.addAttribute("page", page);
-        model.addAttribute("comments", comments);
-        model.addAttribute("likeCount", likeCount);
-        model.addAttribute("ifLike", ifLike);
+        model.addAttribute("replies", replies);
+//        model.addAttribute("likeCount", likeCount);
+//        model.addAttribute("ifLike", ifLike);
 
         return "bro/post";
     }

@@ -28,7 +28,6 @@
     <!-- 帖子详情 -->
     <!-- 标题 -->
     <h5 class="mb-4">
-        <img src="http://static.nowcoder.com/images/img/icons/ico-discuss.png"/>
         <span th:utext="${post.title}">島民為什麼不用C++</span>
         <div class="float-right">
             <a th:href="|/board/${board.ename}|">
@@ -48,7 +47,7 @@
                  alt="用户头像" style="width:50px;height:50px;">
         </a>
         <div class="media-body">
-            <div class="mt-0 text-warning" th:utext="${user.username}">user</div>
+            <div class="mt-0 text-success" th:utext="${user.username}">user</div>
             <div class="text-muted mt-3">
                 <b th:text="${#dates.format(post.createTime, 'yyyy-MM-dd HH:mm:ss')}">2019-04-15
                 15:32:18</b>
@@ -74,7 +73,7 @@
         然後開課第一天就丟給你幾百頁的講義教你自己看
         期末要交成果出來
         每天上課就是面對電腦，教室超安靜
-        學程式設計都這樣看書看講義就好？
+        學程式設計都這樣看書看講義就好？ring
     </div>
 
 
@@ -84,7 +83,7 @@
         <hr>
 
         <ul class="list-unstyled mt-4">
-            <li class="media pb-3 pt-3 mb-3 border-bottom" th:each="map:${comments}">
+            <li class="media pb-3 pt-3 mb-3 border-bottom" th:each="map:${replies}">
                 <a th:href="|/user/${map.user.username}|">
                     <img th:src="${map.user.avatar}" class="align-self-start mr-4 user-header"
                          style="width:50px;height:50px;" alt="avatar">
@@ -122,7 +121,6 @@
     </div>
 
     <!-- ---------   pagination   ------------->
-
     <ul class="pagination justify-content-center" th:with="begin=1 , end=${page.totalPage} , size=2"
         style="padding-top: 100px">
         <!-- 上一页 -->

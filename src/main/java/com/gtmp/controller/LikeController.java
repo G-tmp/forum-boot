@@ -4,9 +4,9 @@ import com.gtmp.POJO.User;
 import com.gtmp.enums.ObjectTypeEnum;
 import com.gtmp.service.LikeService;
 import com.gtmp.util.ForumConstant;
-import com.gtmp.util.ForumUtil;
-import com.gtmp.util.HostHolder;
 import com.gtmp.util.JsonRes;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +20,6 @@ public class LikeController implements ForumConstant {
     @Autowired
     LikeService likeService;
 
-    @Autowired
-    HostHolder hostHolder;
-
 //    @Resource
 //    EventProducer eventProducer;
 
@@ -35,8 +32,9 @@ public class LikeController implements ForumConstant {
         Integer entityType = (Integer) param.get("entityType");
         Integer entityId = (Integer) param.get("entityId");
         Integer toUserId = (Integer) param.get("toUserId");
+        Subject subject = SecurityUtils.getSubject();
+        User loginUser = (User) subject.getPrincipal();
 
-        User loginUser = hostHolder.getUser();
         if (entityType == 1 && loginUser.getId() == entityId) {
             return new JsonRes().setCode(JsonRes.ERROR_CODE).setMsg("你脸皮真厚");
         }

@@ -98,10 +98,13 @@ public class User {
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", salt='" + salt + '\'' +
+                ", status=" + status +
                 ", avatar='" + avatar + '\'' +
+                ", createTime=" + createTime +
+                ", roleId=" + roleId +
+                ", role=" + role +
                 '}';
     }
-
 
     public Integer getStatus() {
         return status;

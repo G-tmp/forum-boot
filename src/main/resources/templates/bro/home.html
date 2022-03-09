@@ -55,25 +55,13 @@
                         學程式設計都這樣看書看講義就好？
                     </a>
                 </div>
-
-                <!--                <h6 class="mt-4 mb-3">-->
-                <!--                    <a th:href="@{|/post/${map.post.id}|}" th:utext="${map.post.title}">-->
-                <!--                        想到高中的時候有程式設計 然後開課第一天-->
-                <!--                        然後開課第一天就丟給你幾百頁的講義教你自己看-->
-                <!--                        期末要交成果出來-->
-                <!--                        每天上課就是面對電腦，教室超安靜-->
-                <!--                        學程式設計都這樣看書看講義就好？-->
-                <!--                    </a>-->
-                <!--                    &lt;!&ndash;                    <span class="badge badge-secondary bg-primary" th:if="${map.post.type==1}">置顶</span>&ndash;&gt;-->
-                <!--                    &lt;!&ndash;                    <span class="badge badge-secondary bg-danger" th:if="${map.post.status==1}">精华</span>&ndash;&gt;-->
-                <!--                </h6>-->
                 <div class="text-muted font-size-12">
                     <a th:href="|/board/${map.board.ename}|">
                         <button type="button " class="btn btn-info btn-sm" th:text="${map.board.name}">
                             board
                         </button>
                     </a>
-                    <u class="mr-3" th:utext="${map.user.username}">user</u>
+                    <span class="font-size-12 text-success" th:utext="${map.user.username}">user</span>
                     <ul class="d-inline float-right">
                         <li class="d-inline ml-2" th:if="${map.likeCount} > 0">赞
                             <span th:text="${map.likeCount}">11</span>

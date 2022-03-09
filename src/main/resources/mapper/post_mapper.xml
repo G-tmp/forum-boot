@@ -7,7 +7,7 @@
     </sql>
 
     <sql id="insertFields">
-        `board_id`,`user_id`, `title`, `content`,`create_time`,`lastmodified_time`
+        `board_id`,`user_id`, `title`, `content`
     </sql>
 
     <select id="listPostsOrderByModifyTime" resultType="com.gtmp.POJO.Post">
@@ -55,13 +55,13 @@
         limit #{offset},#{limit};
     </select>
 
-    <select id="selectPostCount" resultType="int">
+    <select id="countPost" resultType="int">
         select count(id)
         from `post`
         where status != 2 ;
     </select>
 
-    <select id="selectPostCountByBoardId" resultType="int">
+    <select id="countPostByBoardId" resultType="int">
         select count(id)
         from `post`
         where status != 2 and board_id = #{boardId};
@@ -77,7 +77,7 @@
     <insert id="insertPost" parameterType="com.gtmp.POJO.Post" keyProperty="id">
         insert into `post`
         (<include refid="insertFields"/>)
-        values (#{boardId},#{userId}, #{title}, #{content},#{createTime},#{lastModifiedTime} )
+        values (#{boardId},#{userId}, #{title}, #{content} )
     </insert>
 
     <update id="increaseReplyCount">

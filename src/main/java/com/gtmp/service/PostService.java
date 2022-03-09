@@ -194,12 +194,12 @@ public class PostService {
         return postMapper.listPostsByBoardId(boardId, offset, limit);
     }
 
-    public Integer selectPostCount() {
-        return postMapper.selectPostCount();
+    public Integer countPost() {
+        return postMapper.countPost();
     }
 
-    public Integer selectPostCountByBoardId(int boardId) {
-        return postMapper.selectPostCountByBoardId(boardId);
+    public Integer countPostByBoardId(int boardId) {
+        return postMapper.countPostByBoardId(boardId);
     }
 
     public Integer insertPost(Post post) {
@@ -207,17 +207,12 @@ public class PostService {
             throw new IllegalArgumentException("参数不能为空!");
         }
 
-        // 转义 HTML
-        post.setTitle(HtmlUtils.htmlEscape(post.getTitle()));
-        post.setContent(HtmlUtils.htmlEscape(post.getContent()));
-
         Integer res = postMapper.insertPost(post);
-        String key = RedisKeyUtil.getPostKey(post.getId());
 
-        addCache(post);
-        addTimeRank(post);
-        addScoreRank(post);
-
+//        String key = RedisKeyUtil.getPostKey(post.getId());
+//        addCache(post);
+//        addTimeRank(post);
+//        addScoreRank(post);
 
         return res;
     }
@@ -235,6 +230,5 @@ public class PostService {
 
         return post;
     }
-
 
 }

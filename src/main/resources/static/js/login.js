@@ -23,12 +23,13 @@ function login() {
         contentType: "application/json; charset=UTF-8",
         dataType: "json",
         success: function (result) {
-            if (result['code'] === 0) {
-                window.location.href = "http://localhost:8080/";
+            if (result.code === 0) {
                 sessionStorage.setItem('status','loggedIn');
-                sessionStorage.setItem('messageCounter',0);
+                console.log(result.data.unread);
+                sessionStorage.setItem('messageCounter', result.data.unread);
+                window.location.href = "http://localhost:8080/";
             } else {
-                alert(result['msg']);
+                alert(result.msg);
             }
         },
         error: function () {

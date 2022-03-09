@@ -2,12 +2,12 @@ package com.gtmp.controller;
 
 import com.gtmp.POJO.User;
 import com.gtmp.enums.ObjectTypeEnum;
-import com.gtmp.service.FollowService;
 import com.gtmp.service.LikeService;
 import com.gtmp.service.UserService;
 import com.gtmp.util.ForumConstant;
 import com.gtmp.util.JsonRes;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,8 +44,6 @@ public class UserController implements ForumConstant {
     @Resource
     LikeService likeService;
 
-    @Resource
-    FollowService followService;
 
 
     @RequestMapping(value = "/user/setting", method = RequestMethod.GET)
@@ -90,8 +88,10 @@ public class UserController implements ForumConstant {
 
     @RequestMapping(value = "/profile", method = RequestMethod.GET)
     public String getProfilePage(Model model) {
-        User user = (User) SecurityUtils.getSubject().getSession().getAttribute("loginUser");
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
         System.out.println(user);
+
         if (user == null) {
             throw new RuntimeException("error");
         }
@@ -102,13 +102,13 @@ public class UserController implements ForumConstant {
 //        model.addAttribute("likeCount", likeCount);
 //
         // 关注数量
-        long followingCount = followService.findFollowingCount(ObjectTypeEnum.USER, user.getId());
-        // 粉丝数量
-        long followerCount = followService.findFollowerCount(ObjectTypeEnum.USER, user.getId());
+//        long followingCount = followService.findFollowingCount(ObjectTypeEnum.USER, user.getId());
+//        // 粉丝数量
+//        long followerCount = followService.findFollowerCount(ObjectTypeEnum.USER, user.getId());
 
         model.addAttribute("user", user);
-        model.addAttribute("followingCount", followingCount);
-        model.addAttribute("followerCount", followerCount);
+//        model.addAttribute("followingCount", followingCount);
+//        model.addAttribute("followerCount", followerCount);
 
         return "bro/profile";
     }
@@ -126,18 +126,18 @@ public class UserController implements ForumConstant {
 //        model.addAttribute("likeCount", likeCount);
 //
         // 关注数量
-        long followingCount = followService.findFollowingCount(ObjectTypeEnum.USER, user.getId());
-        // 粉丝数量
-        long followerCount = followService.findFollowerCount(ObjectTypeEnum.USER, user.getId());
-        // 是否当前用户已关注此用户
-        boolean isFollowing = false;
+//        long followingCount = followService.findFollowingCount(ObjectTypeEnum.USER, user.getId());
+//        // 粉丝数量
+//        long followerCount = followService.findFollowerCount(ObjectTypeEnum.USER, user.getId());
+//        // 是否当前用户已关注此用户
+//        boolean isFollowing = false;
 //        if (hostHolder.getUser() != null) {
 //            isFollowing = followService.hasFollowed(hostHolder.getUser().getId(), ObjectTypeEnum.USER, user.getId());
 //        }
 
-        model.addAttribute("followerCount", followerCount);
-        model.addAttribute("followingCount", followingCount);
-        model.addAttribute("ifFollowing", isFollowing);
+//        model.addAttribute("followerCount", followerCount);
+//        model.addAttribute("followingCount", followingCount);
+//        model.addAttribute("ifFollowing", isFollowing);
         model.addAttribute("user", user);
 
         return "bro/user";

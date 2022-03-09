@@ -43,16 +43,16 @@
             <!-- 个人信息 -->
             <div class="media mt-5">
                 <img th:src="${user.avatar}" id="avatar" class="align-self-start mr-4" alt="用户头像"
-                     style="width:50px;">
+                     style="width:80px;height: 80px;">
                 <div class="media-body">
                     <h5 class="mt-0 text-success">
                         <span th:utext="${user.username}">nowcoder</span>
                         <input type="hidden" id="entityId" th:value="${user.id}">
-                        <button th:text="|${ifFollowing == true ? '已关注' : '关注TA'} |"
-                                th:onclick="|follow(this,1,${user.id} )|" type="button" id="followBtn"
-                                th:class="|btn btn-sm float-right mr-5  ${ifFollowing == true ? 'btn-secondary' : 'btn-info'}|">
-                            关注TA
-                        </button>
+<!--                        <button th:text="|${ifFollowing == true ? '已关注' : '关注TA'} |"-->
+<!--                                th:onclick="|follow(this,1,${user.id} )|" type="button" id="followBtn"-->
+<!--                                th:class="|btn btn-sm float-right mr-5  ${ifFollowing == true ? 'btn-secondary' : 'btn-info'}|">-->
+<!--                            关注TA-->
+<!--                        </button>-->
                     </h5>
                     <div class="text-muted mt-3">
                         <span>注册于 <i class="text-muted"
@@ -65,13 +65,13 @@
 <!--                        </span>-->
 <!--                    </div>-->
 
-                    <div class="text-muted mt-3 mb-5">
-                        <span>following <a id="followingCount" class="text-primary"
-                                           th:text="${followingCount}">5</a> </span>
-                        <span class="ml-4">follower <a id="followerCount" class="text-primary"
-                                                       th:text="${followerCount}">123</a> </span>
-                        <!--                        <span class="ml-4">获得了 <i class="text-danger" th:text="${likeCount}">87</i> 个赞</span>-->
-                    </div>
+<!--                    <div class="text-muted mt-3 mb-5">-->
+<!--                        <span>following <a id="followingCount" class="text-primary"-->
+<!--                                           th:text="${followingCount}">5</a> </span>-->
+<!--                        <span class="ml-4">follower <a id="followerCount" class="text-primary"-->
+<!--                                                       th:text="${followerCount}">123</a> </span>-->
+<!--                        &lt;!&ndash;                        <span class="ml-4">获得了 <i class="text-danger" th:text="${likeCount}">87</i> 个赞</span>&ndash;&gt;-->
+<!--                    </div>-->
                 </div>
 
             </div>

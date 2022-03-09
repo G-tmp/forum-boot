@@ -1,7 +1,6 @@
 package com.gtmp.filter;
 
 import com.gtmp.util.JsonRes;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.AuthenticationFilter;
 

@@ -22,10 +22,7 @@ import javax.mail.MessagingException;
 import javax.mail.SendFailedException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -48,6 +45,9 @@ public class LoginService implements ForumConstant {
 
     @Autowired
     HttpServletResponse response;
+
+    @Autowired
+    NotificationService notificationService;
 
     @Autowired
     RoleService roleService;
@@ -215,17 +215,10 @@ public class LoginService implements ForumConstant {
         }
 
         // 验证激活状态
-        if (user.getStatus() == 0) {
+        if (user.getStatus() == -1) {
             jsonRes.setMsg("该账号未激活!");
             return jsonRes;
         }
-
-//        // 验证密码
-//        password = ForumUtil.md5(password + user.getSalt());
-//        if (!user.getPassword().equals(password)) {
-//            map.put("passwordMsg", "密码不正确!");
-//            return map;
-//        }
 
         String salt = user.getSalt();
         password = new SimpleHash("MD5", password, salt, 2).toString();
@@ -234,7 +227,6 @@ public class LoginService implements ForumConstant {
         try {
             subject.login(new UsernamePasswordToken(email, password));
             subject.getSession().setAttribute("loginUser", user);
-            jsonRes.setData(subject.getSession().getId());
 
             // 成功登录, 生成登录凭证
 //            if (expiredSecond > 0) {
@@ -256,8 +248,13 @@ public class LoginService implements ForumConstant {
             return jsonRes;
         }
 
+        Integer unread = notificationService.countUnreadNotificationByUserId(user.getId());
+        Map<String,Object> data = new LinkedHashMap<>();
+        data.put("unread", unread);
+
         jsonRes.setCode(JsonRes.SUCCESS_CODE);
         jsonRes.setMsg(JsonRes.SUCCESS_MSG);
+        jsonRes.setData(data);
         return jsonRes;
     }
 

@@ -148,8 +148,8 @@ public class LoginController implements ForumConstant {
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public String logout() {
         Subject subject = SecurityUtils.getSubject();
-        subject.logout();
         subject.getSession().removeAttribute("loginUser");
+        subject.logout();
         return "redirect:/";
     }
 

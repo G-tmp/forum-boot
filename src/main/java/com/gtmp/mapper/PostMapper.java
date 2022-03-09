@@ -9,19 +9,19 @@ import java.util.List;
 @Mapper
 public interface PostMapper {
 
-    List<Post> listPostsOrderByCreateTime(int offset,int limit);
+//    List<Post> listPostsOrderByCreateTime(int offset,int limit);
+
+    //    List<Post> listPostsOrderByScore(int offset,int limit);
 
     List<Post> listPostsOrderByModifyTime(int offset,int limit);
-
-    List<Post> listPostsOrderByScore(int offset,int limit);
 
     List<Post> listPostsByUserId(int userId, int offset, int limit);
 
     List<Post> listPostsByBoardId(int boardId, int offset, int limit);
 
-    Integer selectPostCount();
+    Integer countPost();
 
-    Integer selectPostCountByBoardId(@Param("boardId") int boardId);
+    Integer countPostByBoardId(@Param("boardId") int boardId);
 
     Post selectPostById(@Param("id")int id);
 

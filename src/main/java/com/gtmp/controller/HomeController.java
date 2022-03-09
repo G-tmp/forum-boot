@@ -42,7 +42,7 @@ public class HomeController implements ForumConstant {
     @RequestMapping(value = {"/", "/index"}, method = RequestMethod.GET)
     public String toIndexPage(Model model, @RequestParam(value = "page", required = false) Integer cur) {
         Page page = new Page();
-        page.setProperties(5, cur, postService.selectPostCount());
+        page.setProperties(5, cur, postService.countPost());
         page.setPath("/index");
 
         List<Post> list = postService.listPostsNew((page.getCur() - 1) * page.getSize(), page.getSize());

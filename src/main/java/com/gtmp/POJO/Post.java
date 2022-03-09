@@ -7,8 +7,6 @@ import java.util.Date;
 public class Post {
 
     private Integer id;
-    private Integer boardId;
-    private Integer userId;
     private String title;
     private String content;
     private Integer status;     // 0-delete; 1-normal display. default 1
@@ -16,6 +14,10 @@ public class Post {
     private Date lastModifiedTime;
     private Integer replyCount;
     private Double score;
+    private Integer userId;
+    private User user;
+    private Integer boardId;
+    private Board board;
 
 
 
@@ -138,4 +140,19 @@ public class Post {
     }
 
 
+    public Board getBoard() {
+        return board;
+    }
+
+    public void setBoard(Board board) {
+        this.board = board;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

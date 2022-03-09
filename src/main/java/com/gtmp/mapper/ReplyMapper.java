@@ -21,7 +21,7 @@ public interface ReplyMapper {
     Integer insertReply(Reply reply);
 
 
-    Integer selectReplyCountByPostId(@Param("postId")Integer postId);
+    Integer countReplyByPostId(@Param("postId")Integer postId);
 
 
     Reply selectReplyById(Integer id);

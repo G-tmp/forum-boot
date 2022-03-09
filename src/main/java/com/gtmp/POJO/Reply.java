@@ -5,11 +5,13 @@ import java.util.Date;
 public class Reply {
     private Integer id;
     private String content;
-    private Integer userId;
-    private Integer postId;
     private Date createTime;
     private Integer floor;
     private Integer status;
+    private Integer userId;
+    private User user;
+    private Integer postId;
+    private Post post;
 
     public Reply() {
 
@@ -99,4 +101,19 @@ public class Reply {
     }
 
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Post getPost() {
+        return post;
+    }
+
+    public void setPost(Post post) {
+        this.post = post;
+    }
 }

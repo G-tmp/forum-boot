@@ -40,7 +40,6 @@ function display_message(message) {
         $("#message-box").text(i);
         // $("#message-box").show();
     }
-    console.log(message);
 }
 
 
@@ -71,5 +70,4 @@ $(document).ready(function () {
     }
 
     display_message(0);
-    console.log(messageCounter);
 });

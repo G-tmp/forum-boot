@@ -14,13 +14,13 @@ import java.time.LocalDateTime;
 public class WebSocketTextHandler extends TextWebSocketHandler {
 
     // send message event
-    @Override
-    public void handleTextMessage(WebSocketSession session, TextMessage message) throws InterruptedException, IOException {
-        String payload = message.getPayload();
-        String jsessionId = (String) session.getAttributes().get("jsessionId");
-        System.out.println( jsessionId + " Says " + payload);
-        session.sendMessage(new TextMessage("server response: " + jsessionId + " news " + payload + " " + LocalDateTime.now().toString()));
-    }
+//    @Override
+//    public void handleTextMessage(WebSocketSession session, TextMessage message) throws InterruptedException, IOException {
+//        String payload = message.getPayload();
+//        String jsessionId = (String) session.getAttributes().get("jsessionId");
+//        System.out.println( jsessionId + " Says " + payload);
+//        session.sendMessage(new TextMessage("server response: " + jsessionId + " news " + payload + " " + LocalDateTime.now().toString()));
+//    }
 
 
     // onopen event

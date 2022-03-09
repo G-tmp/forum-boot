@@ -31,7 +31,7 @@
         values (#{content},#{userId},#{postId},(select reply_count from `post` where id = #{postId}) );
     </insert>
 
-    <select id="selectReplyCountByPostId" resultType="int">
+    <select id="countReplyByPostId" resultType="int">
         select count(id)
         from `reply`
         where post_id = #{postId};
