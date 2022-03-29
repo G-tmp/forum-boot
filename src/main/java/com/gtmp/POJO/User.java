@@ -90,22 +90,6 @@ public class User {
 
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                ", salt='" + salt + '\'' +
-                ", status=" + status +
-                ", avatar='" + avatar + '\'' +
-                ", createTime=" + createTime +
-                ", roleId=" + roleId +
-                ", role=" + role +
-                '}';
-    }
-
     public Integer getStatus() {
         return status;
     }
@@ -128,5 +112,27 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", salt='" + salt + '\'' +
+                ", status=" + status +
+                ", avatar='" + avatar + '\'' +
+                ", createTime=" + createTime +
+                ", roleId=" + roleId +
+                ", role=" + role +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        User other = (User)obj;
+        return this.getId().equals(other.getId());
     }
 }

@@ -14,9 +14,8 @@ public class ShiroAuthorizeRolesFilter extends RolesAuthorizationFilter {
 
     @Override
     public boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws IOException {
-        System.out.println("authorize role filter ");
-
         Subject subject = this.getSubject(request, response);
+
         String[] rolesArray = (String[])((String[])mappedValue);
         System.out.println(Arrays.toString(rolesArray));
 

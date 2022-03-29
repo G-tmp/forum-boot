@@ -5,7 +5,8 @@ var messageCounter = 0;
 
 
 function wsconnect() {
-    ws = new WebSocket('ws://localhost:8080/user');
+    ws = new WebSocket('ws://' + window.location.host + "/user");
+
     ws.onmessage = function(data) {
         display_message(data.data);
     };

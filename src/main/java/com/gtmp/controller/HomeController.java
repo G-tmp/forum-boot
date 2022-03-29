@@ -1,6 +1,5 @@
 package com.gtmp.controller;
 
-
 import com.gtmp.POJO.Board;
 import com.gtmp.POJO.Post;
 import com.gtmp.POJO.User;

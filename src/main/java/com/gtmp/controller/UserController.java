@@ -1,15 +1,16 @@
 package com.gtmp.controller;
 
 import com.gtmp.POJO.User;
-import com.gtmp.enums.ObjectTypeEnum;
 import com.gtmp.service.LikeService;
 import com.gtmp.service.UserService;
 import com.gtmp.util.ForumConstant;
 import com.gtmp.util.JsonRes;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +22,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Map;
 
 
 @Controller
@@ -44,6 +44,10 @@ public class UserController implements ForumConstant {
     @Resource
     LikeService likeService;
 
+    @Autowired
+    SessionDAO sessionDAO;
+
+
 
 
     @RequestMapping(value = "/user/setting", method = RequestMethod.GET)
@@ -55,7 +59,7 @@ public class UserController implements ForumConstant {
     @ResponseBody
     @RequestMapping(value = "/user/upload", method = RequestMethod.POST)
     public JsonRes uploadAvatar(@RequestParam("img") MultipartFile avatarImage) {
-        User user = (User) SecurityUtils.getSubject().getSession().getAttribute("loginUser");
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
 
         return userService.updateAvatar(user.getId(), avatarImage);
 
@@ -106,9 +110,9 @@ public class UserController implements ForumConstant {
 //        // 粉丝数量
 //        long followerCount = followService.findFollowerCount(ObjectTypeEnum.USER, user.getId());
 
-        model.addAttribute("user", user);
 //        model.addAttribute("followingCount", followingCount);
 //        model.addAttribute("followerCount", followerCount);
+        model.addAttribute("user", user);
 
         return "bro/profile";
     }
@@ -118,7 +122,7 @@ public class UserController implements ForumConstant {
     public String getUserPage(@PathVariable("username") String username, Model model) {
         User user = userService.selectUserByUsername(username);
         if (user == null) {
-           return "error/404";
+           return "forward:/404";
         }
 
 //        // 获赞数量

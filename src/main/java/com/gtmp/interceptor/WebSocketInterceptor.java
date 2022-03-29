@@ -3,6 +3,7 @@ package com.gtmp.interceptor;
 import com.gtmp.util.WsSessionManager;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
@@ -25,10 +26,12 @@ public class WebSocketInterceptor implements HandshakeInterceptor {
         if (request instanceof ServletServerHttpRequest) {
             ServletServerHttpRequest servletServerRequest = (ServletServerHttpRequest) request;
             HttpServletRequest servletRequest = servletServerRequest.getServletRequest();
-            Cookie cookie = WebUtils.getCookie(servletRequest, "JSESSIONID");
-            Session session = SecurityUtils.getSubject().getSession();
 
-            if (cookie != null && cookie.getValue().equals(session.getId())) {
+            Cookie cookie = WebUtils.getCookie(servletRequest, "JSESSIONID");
+            Subject subject = SecurityUtils.getSubject();
+            Session session = subject.getSession(false);
+
+            if (cookie != null && session!=null && cookie.getValue().equals(session.getId())) {
                 attributes.put("JSESSIONID", cookie.getValue());
                 return true;
             }

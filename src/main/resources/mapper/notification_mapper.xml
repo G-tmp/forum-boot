@@ -40,9 +40,9 @@
         where n.`to_user_id` = #{userId};
     </select>
 
-    <select id="countUnreadNotificationByUserId" resultType="int">
+    <select id="countUnreadNotificationByUserId" resultType="int" parameterType="integer">
         select
-        <include refid="selectFields"/>
+        count(id)
         from `notification` where `read` = 0 and `to_user_id` = #{userId};
     </select>
 

@@ -49,7 +49,7 @@ public class NotificationService {
         return list;
     }
 
-    public Integer countUnreadNotificationByUserId(Integer userId){
+    public int countUnreadNotificationByUserId(Integer userId){
         return notificationMapper.countUnreadNotificationByUserId(userId);
     }
 

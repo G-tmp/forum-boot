@@ -14,9 +14,8 @@ public class ShiroAuthorizePermsFilter extends PermissionsAuthorizationFilter {
 
     @Override
     public boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws IOException {
-        System.out.println("authorize perm filter ");
-
         Subject subject = this.getSubject(request, response);
+
         String[] permsArray = (String[])((String[])mappedValue);
         System.out.println(Arrays.toString(permsArray));
 

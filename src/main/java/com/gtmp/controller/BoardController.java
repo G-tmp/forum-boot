@@ -26,6 +26,7 @@ import java.util.Map;
 
 
 @Controller
+@RequestMapping("/board")
 public class BoardController {
 
     @Autowired
@@ -41,9 +42,13 @@ public class BoardController {
     private LikeService likeService;
 
 
-    @RequestMapping(value = "/board/{ename}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{ename}", method = RequestMethod.GET)
     private String select(Model model, @PathVariable("ename") String ename, @RequestParam(value = "page", required = false) Integer cur) {
         Board board = boardServer.selectBoardByEname(ename);
+
+        if(board == null){
+            return "forward:/404";
+        }
 
         Page page = new Page();
         page.setPath("/board/" + board.getEname());

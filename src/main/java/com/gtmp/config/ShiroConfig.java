@@ -4,6 +4,10 @@ package com.gtmp.config;
 import com.gtmp.filter.ShiroAuthenticateFilter;
 import com.gtmp.filter.ShiroAuthorizePermsFilter;
 import com.gtmp.filter.ShiroAuthorizeRolesFilter;
+import org.apache.shiro.mgt.DefaultSecurityManager;
+import org.apache.shiro.session.mgt.DefaultSessionManager;
+import org.apache.shiro.session.mgt.eis.MemorySessionDAO;
+import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
@@ -33,24 +37,31 @@ public class ShiroConfig {
     }
 
     @Bean
-    ShiroRealm myRealm() {
+    ShiroRealm shiroRealm() {
         return new ShiroRealm();
     }
 
     @Bean
-    DefaultWebSessionManager defaultWebSessionManager(){
+    public SessionDAO sessionDAO() {
+        return new MemorySessionDAO();  // default dao
+    }
+
+    @Bean
+    DefaultSessionManager defaultWebSessionManager(){
         DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
         sessionManager.setSessionIdUrlRewritingEnabled(false);
         sessionManager.setSessionIdCookieEnabled(true);
+        sessionManager.setSessionDAO(sessionDAO());
         return sessionManager;
     }
 
 
     @Bean
-    DefaultWebSecurityManager securityManager() {
+    DefaultSecurityManager securityManager() {
+//        DefaultSecurityManager securityManager = new DefaultSecurityManager();
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setSessionManager(defaultWebSessionManager());
-        securityManager.setRealm(myRealm());
+        securityManager.setRealm(shiroRealm());
 
         return securityManager;
     }
@@ -87,6 +98,7 @@ public class ShiroConfig {
         map.put("/","anon");
         map.put("/index","anon");
         map.put("/profile","authc");
+        map.put("/notification/**", "authc");
         map.put("/*/insert","authc");
         map.put("/normal/**","roles[normal, root]");
         map.put("/admin/**","roles[root]");

@@ -13,14 +13,16 @@ public class RegexUtil {
     private RegexUtil(){}
 
 
+    // return username set, do not contain @
     public static Set<String> mention(String str){
+        System.out.println(str);
         final String regex = "\\B@[a-z0-9_-]+";
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher matcher =pattern.matcher(str);
         Set<String> set = new LinkedHashSet<>();
 
         while (matcher.find()){
-            set.add(matcher.group());
+            set.add(matcher.group().substring(1));
         }
 
         return set.size()==0 ? null : set;

@@ -12,13 +12,13 @@ import java.io.IOException;
 
 public class ShiroAuthenticateFilter extends AuthenticationFilter {
 
+
+
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object o)  {
-        System.out.println("authenticate filter");
-
         Subject subject = this.getSubject(request, response);
 
-        if(null != subject){
+        if(subject != null){
             if(subject.isRemembered()){
                 return true;
             }

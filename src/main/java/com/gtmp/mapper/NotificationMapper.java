@@ -12,7 +12,7 @@ public interface NotificationMapper {
 
     public List<Notification> listNotificationByUserId(Integer userId);
 
-    public Integer countUnreadNotificationByUserId(Integer userId);
+    public int countUnreadNotificationByUserId(Integer userId);
 
     public void readNotification(Integer id);
 

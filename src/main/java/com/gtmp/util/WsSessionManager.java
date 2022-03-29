@@ -1,5 +1,6 @@
 package com.gtmp.util;
 
+import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
@@ -14,13 +15,13 @@ public class WsSessionManager {
     }
 
 
-    public static WebSocketSession remove(String key) {
-        return SESSION_POOL.remove(key);
-    }
+//    public static WebSocketSession remove(String key) {
+//        return SESSION_POOL.remove(key);
+//    }
 
 
-    public static void removeAndClose(String key) {
-        WebSocketSession session = remove(key);
+    public static void remove(String key) {
+        WebSocketSession session = SESSION_POOL.remove(key);
         if (session != null) {
             try {
                 session.close();
@@ -41,4 +42,14 @@ public class WsSessionManager {
         return SESSION_POOL;
     }
 
+
+    public static void sendMessage(String key, String msg)  {
+        if (get(key).isOpen()) {
+            try {
+                get(key).sendMessage(new TextMessage(msg));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

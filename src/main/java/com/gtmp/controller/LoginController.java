@@ -4,7 +4,6 @@ package com.gtmp.controller;
 import com.google.code.kaptcha.Producer;
 import com.gtmp.POJO.User;
 import com.gtmp.service.LoginService;
-import com.gtmp.service.UserService;
 import com.gtmp.util.*;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -20,12 +19,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -65,7 +61,7 @@ public class LoginController implements ForumConstant {
 
     /**
      * 账号激活
-     * http://localhost:8080/activation/{emailMd5}/{code}
+     * http://127.0.0.1:8080/activation/{emailMd5}/{code}
      */
     @RequestMapping("/activation/{emailMd5}/{code}")
     public String activation(Model model, @PathVariable("emailMd5") String emailMd5, @PathVariable("code") String code) {
@@ -138,17 +134,16 @@ public class LoginController implements ForumConstant {
         String verifyCode = (String) dataMap.get("verifyCode");
         boolean rememberMe = (boolean) dataMap.get("rememberMe");
 
-        //检查账号、密码、失效时间 判断登录
-        int expiredSeconds = rememberMe ? REMEMBER_EXPIRED_SECONDS : DEFAULT_EXPIRED_SECONDS;
+//        //检查账号、密码、失效时间 判断登录
+//        int expiredSeconds = rememberMe ? REMEMBER_EXPIRED_SECONDS : DEFAULT_EXPIRED_SECONDS;
 
-        return loginService.login(email, password, verifyCode, expiredSeconds);
+        return loginService.login(email, password, verifyCode, rememberMe);
     }
 
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public String logout() {
         Subject subject = SecurityUtils.getSubject();
-        subject.getSession().removeAttribute("loginUser");
         subject.logout();
         return "redirect:/";
     }

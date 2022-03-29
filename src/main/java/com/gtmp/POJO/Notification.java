@@ -16,12 +16,14 @@ public class Notification {
     private Date createTime;
 
     public enum Event{
-        REPLY,
         MENTION,
+        REPLY,
+        TO,
         LIKE;
     }
 
     public enum Trigger{
+        USER,
         POST,
         REPLY;
     }

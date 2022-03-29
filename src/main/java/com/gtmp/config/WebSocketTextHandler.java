@@ -26,13 +26,15 @@ public class WebSocketTextHandler extends TextWebSocketHandler {
     // onopen event
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+        System.out.println(session.toString());
         String jsessionId = (String) session.getAttributes().get("JSESSIONID");
+        System.out.println("jsessionId: "+jsessionId);
 
         if (jsessionId != null) {
-            // The user is connected successfully and put into the online user cache
-            if (WsSessionManager.get(jsessionId) == null){
-                WsSessionManager.add(jsessionId, session);
-            }
+//            if (WsSessionManager.get(jsessionId) == null){
+//                WsSessionManager.add(jsessionId, session);
+//            }
+            WsSessionManager.add(jsessionId, session);
         } else {
             throw new RuntimeException("User login has expired!");
         }

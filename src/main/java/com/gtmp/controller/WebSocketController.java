@@ -17,7 +17,7 @@ import java.util.Collection;
 public class WebSocketController {
 
     @ResponseBody
-    @RequestMapping(value = "send", method = RequestMethod.GET)
+    @RequestMapping(value = "/send", method = RequestMethod.GET)
     public void send(@RequestParam String msg){
         Collection<WebSocketSession> sessions = WsSessionManager.list().values();
         try {

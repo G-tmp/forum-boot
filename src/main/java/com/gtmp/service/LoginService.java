@@ -175,7 +175,7 @@ public class LoginService implements ForumConstant {
     }
 
 
-    public JsonRes login(String email, String password, String verifyCode, int expiredSecond) {
+    public JsonRes login(String email, String password, String verifyCode, boolean rememberMe) {
         JsonRes jsonRes = new JsonRes();
 
         jsonRes.setCode(JsonRes.ERROR_CODE);
@@ -222,11 +222,14 @@ public class LoginService implements ForumConstant {
 
         String salt = user.getSalt();
         password = new SimpleHash("MD5", password, salt, 2).toString();
-        System.out.println("password: "+password);
         Subject subject = SecurityUtils.getSubject();
         try {
-            subject.login(new UsernamePasswordToken(email, password));
-            subject.getSession().setAttribute("loginUser", user);
+            UsernamePasswordToken token = new UsernamePasswordToken(email, password);
+            token.setRememberMe(rememberMe);
+            subject.login(token);
+            subject.getSession().setAttribute("loginUser", (User)subject.getPrincipal());
+//            subject.getSession().setAttribute("loginUser", user);
+
 
             // 成功登录, 生成登录凭证
 //            if (expiredSecond > 0) {
@@ -243,12 +246,15 @@ public class LoginService implements ForumConstant {
 //                // 设置 Cookie，response浏览器
 //                CookieUtil.add(response, "ticket", loginTicket.getTicket(), contextPath, expiredSecond);
 //            }
-        }catch (UnknownAccountException|IncorrectCredentialsException  e){
-            jsonRes.setMsg("账号密码错误!");
+        }catch (UnknownAccountException e){
+            jsonRes.setMsg("account not exist!");
+            return jsonRes;
+        }catch (IncorrectCredentialsException e){
+            jsonRes.setMsg("password error!");
             return jsonRes;
         }
 
-        Integer unread = notificationService.countUnreadNotificationByUserId(user.getId());
+        int unread = notificationService.countUnreadNotificationByUserId(user.getId());
         Map<String,Object> data = new LinkedHashMap<>();
         data.put("unread", unread);
 

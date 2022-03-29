@@ -6,11 +6,10 @@ import com.gtmp.service.NotificationService;
 import com.gtmp.service.PostService;
 import com.gtmp.service.ReplyService;
 import com.gtmp.service.UserService;
-import com.gtmp.util.ForumConstant;
-import com.gtmp.util.JsonRes;
-import com.gtmp.util.RegexUtil;
+import com.gtmp.util.*;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 
-@RequestMapping("reply/")
+@RequestMapping("/reply")
 @Controller
 public class ReplyController implements ForumConstant {
 
@@ -42,13 +41,14 @@ public class ReplyController implements ForumConstant {
 
 
     @ResponseBody
-    @RequestMapping(value = "insert", method = RequestMethod.POST)
+    @RequestMapping(value = "/insert", method = RequestMethod.POST)
     public JsonRes insert(@RequestBody Map<String, Object> dataMap) {
         String content = (String) dataMap.get("content");
         Integer postId = Integer.valueOf((String) dataMap.get("postId"));
 
-        Session session = SecurityUtils.getSubject().getSession();
-        User loginUser = (User) session.getAttribute("loginUser");
+
+        Subject subject = SecurityUtils.getSubject();
+        User loginUser = (User) subject.getPrincipal();
 
         content = HtmlUtils.htmlEscape(content);
 
@@ -73,23 +73,30 @@ public class ReplyController implements ForumConstant {
                     .setTriggerId(postId);
             int i = notificationService.insertNotification(notification);
             // websocket
+            User toUser = userService.selectUserById(toUserId);
+            String sessionId = ShiroUtil.getActiveSessionId(toUser);
+            WsSessionManager.sendMessage(sessionId, String.valueOf(i));
         }
 
         // notify @user
         Set<String> mention = RegexUtil.mention(content);
+        System.out.println(mention);
         if (mention != null){
             for (String username:mention){
                 User mentionUser = userService.selectUserByUsername(username);
-                if (mentionUser != null  && !mentionUser.getId().equals(loginUser)){
+                System.out.println(mentionUser);
+                if (mentionUser != null  && !mentionUser.getId().equals(loginUser.getId())){
                     Notification notification = new Notification();
                     notification
                             .setFromUserId(loginUser.getId())
                             .setToUserId(mentionUser.getId())
                             .setEvent(Notification.Event.MENTION.toString())
-                            .setTriggerType(Notification.Trigger.REPLY.toString())
+                            .setTriggerType(Notification.Trigger.USER.toString())
                             .setTriggerId(replyId);
                     int i = notificationService.insertNotification(notification);
                     // websocket
+                    String sessionId = ShiroUtil.getActiveSessionId(mentionUser);
+                    WsSessionManager.sendMessage(sessionId, String.valueOf(i));
                 }
             }
         }

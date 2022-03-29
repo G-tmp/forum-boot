@@ -35,7 +35,7 @@ function register() {
         contentType: "application/json;charset=UTF-8",
         success: function (result) {
             if (result['code'] === 0){
-                window.location.href = "http://localhost:8080/login";
+                window.location.href = location.protocol + '//' + location.host;
             }else {
                 alert(result['msg']);
             }

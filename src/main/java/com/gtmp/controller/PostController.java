@@ -17,7 +17,7 @@ import org.springframework.web.util.HtmlUtils;
 import java.util.*;
 
 
-@RequestMapping("post/")
+@RequestMapping("/post")
 @Controller
 public class PostController implements ForumConstant {
     @Autowired

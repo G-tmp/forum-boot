@@ -8,6 +8,7 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -62,7 +63,9 @@ public class ShiroRealm extends AuthorizingRealm {
             throw new UnknownAccountException("account not exist!");
         }
 
+        ByteSource salt = ByteSource.Util.bytes(user.getSalt());
         // If info not match, throw IncorrectCredentialsException
-        return new SimpleAuthenticationInfo(user, user.getPassword(), this.getName());
+        return new SimpleAuthenticationInfo(user, user.getPassword(), salt, this.getName());
     }
+
 }

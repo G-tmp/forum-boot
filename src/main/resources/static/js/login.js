@@ -27,8 +27,8 @@ function login() {
                 sessionStorage.setItem('status','loggedIn');
                 console.log(result.data.unread);
                 sessionStorage.setItem('messageCounter', result.data.unread);
-                window.location.href = "http://localhost:8080/";
-            } else {
+                window.location.href = window.location.protocol + '//' + window.location.host;
+         } else {
                 alert(result.msg);
             }
         },
